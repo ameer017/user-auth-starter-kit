@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 
 const authModel = mongoose.Schema({
-    name: {
+    fullName: {
         type: String,
         required: true
     },
@@ -26,8 +26,8 @@ const authModel = mongoose.Schema({
     },
     role: {
         type: String,
-        default: "user"
-        //admin
+        default: "User"
+        //Admin, Suspended
     },
     password: {
         type: String,

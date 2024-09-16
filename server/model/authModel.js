@@ -36,6 +36,10 @@ const authModel = mongoose.Schema({
     gender: {
         type: String,
         required: true
+    },
+    picture: {
+        type: String,
+        default: "https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg"
     }
 })
 

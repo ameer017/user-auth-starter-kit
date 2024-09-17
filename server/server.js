@@ -6,7 +6,7 @@ const cors = require("cors")
 const mongoose = require("mongoose");
 const errorHandler = require("./middleware/errorMiddleware");
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 4000
 
 app.use(express.json()); //This middleware is used to parse incoming requests with JSON payloads.
 app.use(express.urlencoded({ extended: false })); // This middleware is used to parse incoming requests with URL-encoded payloads (like form submissions).
@@ -20,12 +20,21 @@ app.use(cors({
 
 ))
 
+
 //  Anytime you're accessing http://localhost:5000, you get the following 👀
 app.get("/", (req, res) => {
     res.send("👀 ")
 })
 
-app.use(errorHandler)
-app.listen(PORT, () => {
-    console.log(`Server unning on port ${PORT}`)
-})
+app.use("/api/v1/auth", require("./route/auth"))
+
+app.use(errorHandler);
+//  Connect mongodb
+mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => {
+        app.listen(PORT, () => {
+            console.log(`Server unning on port ${PORT}`)
+        });
+    })
+    .catch((err) => console.log(err));

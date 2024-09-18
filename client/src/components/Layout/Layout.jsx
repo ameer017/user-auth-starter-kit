@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
         <>
 
             <Header />
-            <div className='min-h-[85vh] '>
+            <div className='min-h-[90vh] '>
                 {children}
             </div>
             <Footer />

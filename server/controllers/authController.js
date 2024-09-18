@@ -107,10 +107,93 @@ exports.createUser = asyncHandler(async (req, res) => {
     }
 
 })
-exports.loginUser = asyncHandler(async (req, res) => { })
-exports.logoutUser = asyncHandler(async (req, res) => { })
+
+exports.loginUser = asyncHandler(async (req, res) => {
+    const { emailAddress, password } = req.body;
+
+    if (!emailAddress || !password) {
+        res.status(400);
+        throw new Error("All fields are required!")
+    }
+
+    const foundUser = await User.findOne({ emailAddress });
+
+    if (!foundUser) {
+        res.status(404);
+        throw new Error("User not found! Are you registered?")
+    }
+
+    const checkPassword = await bcrypt.compare(password, foundUser.password);
+
+    if (!checkPassword) {
+        res.status(400);
+        throw new Error("Email or Password incorrect")
+    }
+
+    const token = generateToken(foundUser._id)
+
+    // Send HTTP-only cookie
+    res.cookie("token", token, {
+        path: "/",
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 86400), // 1 day
+        sameSite: "none",
+        secure: true,
+    });
+
+    if (foundUser && checkPassword) {
+        const { _id,
+            fullName,
+            emailAddress,
+            phone_no,
+            address,
+            verified,
+            role,
+            gender,
+            picture } = foundUser;
+
+        console.log(foundUser);
+
+        res.json({
+            _id,
+            fullName,
+            emailAddress,
+            phone_no,
+            address,
+            verified,
+            role,
+            gender,
+            picture,
+            token
+        })
+    }
+
+})
+
+exports.logoutUser = asyncHandler(async (req, res) => {
+    res.cookie("token", "", {
+        path: "/",
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 86400), // 1 day
+        sameSite: "none",
+        secure: true,
+    });
+    return res.status(200).json({ message: "User logged out successfully!" })
+})
+
 exports.getUser = asyncHandler(async (req, res) => { })
-exports.getUsers = asyncHandler(async (req, res) => { })
+
+exports.getUsers = asyncHandler(async (req, res) => {
+    const users = await User.find().sort("-createdAt").select("-password").exec();
+
+    if (!users) {
+        res.status(404)
+        throw new Error("Users not found!");
+    }
+
+    return res.status(200).json(users);
+})
+
 exports.upgradeUser = asyncHandler(async (req, res) => { })
 exports.updateUser = asyncHandler(async (req, res) => { })
 exports.verifyUser = asyncHandler(async (req, res) => { })

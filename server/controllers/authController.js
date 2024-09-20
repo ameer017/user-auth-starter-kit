@@ -348,7 +348,33 @@ exports.sendVerificationEmail = asyncHandler(async (req, res) => {
 })
 
 exports.verifyUser = asyncHandler(async (req, res) => {
+    const { verificationToken } = req.params;
 
+    const hashedToken = hashToken(verificationToken);
+
+    const userToken = await Token.findOne({
+        vToken: hashedToken,
+        expiresAt: { $gt: Date.now() },
+    });
+
+    if (!userToken) {
+        res.status(404);
+        throw new Error("Invalid or Expired Token");
+    }
+
+    // Find User
+    const user = await User.findOne({ _id: userToken.userId });
+
+    if (user.isVerified) {
+        res.status(400);
+        throw new Error("User is already verified");
+    }
+
+    // Now verify user
+    user.isVerified = true;
+    await user.save();
+
+    res.status(200).json({ message: "Account Verification Successful" });
 })
 
 exports.deleteUser = asyncHandler(async (req, res) => {
@@ -362,5 +388,187 @@ exports.deleteUser = asyncHandler(async (req, res) => {
     await userToDelete.deleteOne();
     return res.status(200).json({ message: "User deleted successfully!" })
 })
-exports.resetPassword = asyncHandler(async (req, res) => { })
-exports.loginWithGoogle = asyncHandler(async (req, res) => { })
+
+exports.resetPassword = asyncHandler(async (req, res) => {
+    const { resetToken } = req.params;
+    const { password } = req.body;
+    console.log(resetToken);
+    console.log(password);
+
+    const hashedToken = hashToken(resetToken);
+
+    const userToken = await Token.findOne({
+        rToken: hashedToken,
+        expiresAt: { $gt: Date.now() },
+    });
+
+    if (!userToken) {
+        res.status(404);
+        throw new Error("Invalid or Expired Token");
+    }
+
+    // Find User
+    const user = await User.findOne({ _id: userToken.userId });
+
+    // Now Reset password
+    user.password = password;
+    await user.save();
+
+    res.status(200).json({ message: "Password Reset Successful, please login" });
+});
+
+exports.changePassword = asyncHandler(async (req, res) => {
+    const { oldPassword, password } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+        res.status(404);
+        throw new Error("User not found");
+    }
+
+    if (!oldPassword || !password) {
+        res.status(400);
+        throw new Error("Please enter old and new password");
+    }
+
+    // Check if old password is correct
+    const passwordIsCorrect = await bcrypt.compare(oldPassword, user.password);
+
+    // Save new password
+    if (user && passwordIsCorrect) {
+        user.password = password;
+        await user.save();
+
+        res
+            .status(200)
+            .json({ message: "Password change successful, please re-login" });
+    } else {
+        res.status(400);
+        throw new Error("Old password is incorrect");
+    }
+})
+
+exports.forgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+        res.status(404);
+        throw new Error("No user with this email");
+    }
+
+    // Delete Token if it exists in DB
+    let token = await Token.findOne({ userId: user._id });
+    if (token) {
+        await token.deleteOne();
+    }
+
+    //   Create Verification Token and Save
+    const resetToken = crypto.randomBytes(32).toString("hex") + user._id;
+    console.log(resetToken);
+
+    // Hash token and save
+    const hashedToken = hashToken(resetToken);
+    await new Token({
+        userId: user._id,
+        rToken: hashedToken,
+        createdAt: Date.now(),
+        expiresAt: Date.now() + 60 * (60 * 1000), // 60mins
+    }).save();
+
+    // Construct Reset URL
+    const resetUrl = `${process.env.FRONTEND_URL}/resetPassword/${resetToken}`;
+
+    // Send Email
+
+});
+
+exports.loginWithGoogle = asyncHandler(async (req, res) => {
+    const { userToken } = req.body;
+    //   console.log(userToken);
+
+    const ticket = await client.verifyIdToken({
+        idToken: userToken,
+        audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const { name, email, picture, sub } = payload;
+    const password = Date.now() + sub;
+
+    // Get UserAgent
+    const ua = parser(req.headers["user-agent"]);
+    const userAgent = [ua.ua];
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+
+    if (!user) {
+        //   Create new user
+        const newUser = await User.create({
+            name,
+            email,
+            password,
+            photo: picture,
+            isVerified: true,
+            userAgent,
+        });
+
+        if (newUser) {
+            // Generate Token
+            const token = generateToken(newUser._id);
+
+            // Send HTTP-only cookie
+            res.cookie("token", token, {
+                path: "/",
+                httpOnly: true,
+                expires: new Date(Date.now() + 1000 * 86400), // 1 day
+                sameSite: "none",
+                secure: true,
+            });
+
+            const { _id, name, email, phone, bio, photo, role, isVerified } = newUser;
+
+            res.status(201).json({
+                _id,
+                name,
+                email,
+                phone,
+                bio,
+                photo,
+                role,
+                isVerified,
+                token,
+            });
+        }
+    }
+
+    // User exists, login
+    if (user) {
+        const token = generateToken(user._id);
+
+        // Send HTTP-only cookie
+        res.cookie("token", token, {
+            path: "/",
+            httpOnly: true,
+            expires: new Date(Date.now() + 1000 * 86400), // 1 day
+            sameSite: "none",
+            secure: true,
+        });
+
+        const { _id, name, email, phone, bio, photo, role, isVerified } = user;
+
+        res.status(201).json({
+            _id,
+            name,
+            email,
+            phone,
+            bio,
+            photo,
+            role,
+            isVerified,
+            token,
+        });
+    }
+})

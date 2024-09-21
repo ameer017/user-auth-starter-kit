@@ -2,12 +2,9 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const Token = require("../model/tokenModel");
 const User = require("../model/authModel");
-const Cryptr = require("cryptr");
 const crypto = require("crypto");
 const { generateToken, hashToken, sendMail } = require("../utils/index");
 const jwt = require("jsonwebtoken");
-
-const cryptr = new Cryptr(process.env.CRYPTR_KEY)
 
 
 exports.createUser = asyncHandler(async (req, res) => {
@@ -572,3 +569,18 @@ exports.loginWithGoogle = asyncHandler(async (req, res) => {
         });
     }
 })
+
+exports.loginStatus = asyncHandler(async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.json(false);
+    }
+
+    // Verify token
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (verified) {
+        return res.json(true);
+    }
+    return res.json(false);
+});

@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
         <>
 
             <Header />
-            <div className='min-h-[90vh] '>
+            <div style={{minHeight: "85vh"}}>
                 {children}
             </div>
             <Footer />

@@ -8,6 +8,7 @@ const Header = () => {
                 <Link to="/" className='text-2xl cursor-pointer'>
                     Auth
                 </Link>
+
                 <div className='flex items-center justify-center gap-3'>
                     <Link to="#">
                         Posts

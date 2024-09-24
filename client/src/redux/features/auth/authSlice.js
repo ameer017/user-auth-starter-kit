@@ -100,7 +100,7 @@ export const upgrade = createAsyncThunk(
 );
 
 export const update = createAsyncThunk(
-    "auth/upgrade-user",
+    "auth/update-user",
     async (userData, thunkAPI) => {
         try {
             return await updateUser(userData);
@@ -531,5 +531,61 @@ const authSlice = createSlice({
                 state.message = action.payload;
                 console.log(action.payload);
             })
+
+            .addCase(getAllUsers.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getAllUsers.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.users = action.payload;
+            })
+            .addCase(getAllUsers.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
+
+            .addCase(getSingleUser.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getSingleUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.isLoggedIn = true;
+                state.user = action.payload;
+            })
+            .addCase(getSingleUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
+
+
+            .addCase(deleteSingleUser.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deleteSingleUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload;
+                toast.success(action.payload);
+            })
+            .addCase(deleteSingleUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
     }
 })
+
+export const { RESET, VERIFIED_USER, SUSPENDED_USER } =
+    authSlice.actions;
+
+export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
+export const selectUser = (state) => state.auth.user;
+
+export default authSlice.reducer;

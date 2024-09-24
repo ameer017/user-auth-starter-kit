@@ -367,5 +367,169 @@ const authSlice = createSlice({
                 state.user = null;
                 toast.error(action.payload);
             })
+
+            .addCase(logout.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(logout.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.isLoggedIn = false;
+                state.user = null;
+                toast.success(action.payload);
+            })
+            .addCase(logout.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
+
+            .addCase(upgrade.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(upgrade.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload;
+                toast.success(action.payload);
+            })
+            .addCase(upgrade.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
+
+            .addCase(update.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(update.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.isLoggedIn = true;
+                state.user = action.payload;
+                toast.success("User Updated");
+            })
+            .addCase(update.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
+
+            .addCase(sendVE.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(sendVE.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload;
+                toast.success(action.payload);
+            })
+            .addCase(sendVE.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
+
+            .addCase(verify.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(verify.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload;
+                toast.success(action.payload);
+            })
+            .addCase(verify.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
+
+            .addCase(resetPwd.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(resetPwd.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload;
+                toast.success(action.payload);
+            })
+            .addCase(resetPwd.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
+
+            .addCase(changePwd.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(changePwd.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload;
+                toast.success(action.payload);
+            })
+            .addCase(changePwd.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
+
+            .addCase(forgotPwd.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(forgotPwd.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.message = action.payload;
+                toast.success(action.payload);
+            })
+            .addCase(forgotPwd.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                toast.error(action.payload);
+            })
+
+            .addCase(loginGoogle.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(loginGoogle.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.isLoggedIn = true;
+                state.user = action.payload;
+                toast.success("Login Successful");
+            })
+            .addCase(loginGoogle.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                state.user = null;
+                toast.error(action.payload);
+            })
+
+            .addCase(loginState.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(loginState.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.isLoggedIn = action.payload;
+                console.log(action.payload);
+            })
+            .addCase(loginState.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                console.log(action.payload);
+            })
     }
 })

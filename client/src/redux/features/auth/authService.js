@@ -1,7 +1,12 @@
+//  We'll  make requests to the backend routes with the functions here, by using axios library.
 import axios from "axios"
-const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
-const URL = `${BACKEND_URL}/api/v1/auth/`;
 
+// I beleive you should have the backend link saved in the .env file
+const BACKEND_URL = import.meta.env.VITE_APP_BACKEND_URL;
+const URL = `${BACKEND_URL}/api/v1/auth/`; // represents the endpoint specified in server.js
+
+// each of this function ihas an endpoint relative to their backend function logic
+//  The functions with parameters means that we are sending the parameter values with the request [mostly post and patch methods].
 exports.createUser = async (userData) => {
     const response = await axios.post(`${URL}/create-account`, userData);
     return response.data;

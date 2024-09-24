@@ -12,7 +12,7 @@ route.post("/send-verification-email", protect, sendVerificationEmail);
 route.patch("/verify-user/:verificationToken", verifyUser);
 route.patch("/reset-password/:resetToken", resetPassword);
 route.patch("/change-password", protect, changePassword);
-route.post("/forgotPassword", forgotPassword);
+route.post("/forgot-password", forgotPassword);
 route.post("/google/callback", loginWithGoogle);
 
 

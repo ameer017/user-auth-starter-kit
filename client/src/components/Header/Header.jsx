@@ -1,9 +1,10 @@
 import React from 'react'
 import { Link } from "react-router-dom"
+import "./Header.css"
 
 const Header = () => {
     return (
-        <header className=' '>
+        <header className='header '>
             <nav className=''>
                 <Link to="/" className=''>
                     Auth
@@ -15,7 +16,7 @@ const Header = () => {
                     </Link>
 
                     <Link to="/">
-                        <img className=' ' alt='profile image' />
+                        <img className=' ' src='' alt='profile image' />
                     </Link>
                 </div>
             </nav>

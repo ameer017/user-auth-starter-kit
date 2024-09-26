@@ -1,0 +1,18 @@
+.header {
+    position: sticky;
+    top: 5px;
+    bottom: 10px;
+    padding: 5px 8px;
+
+}
+
+.header>nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: inherit;
+}
+
+.header > nav a, .header > nav > div a {
+    font-size: 18px;
+}

@@ -1,4 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Playwrite DE Grund", cursive;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+/* UTILITY CLASSES */
+
+/* Flex */
+.--flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.--flex-start {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.--flex-end {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.--flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.--dir-column {
+    flex-direction: column;
+}
+
+.--flex-dir-column {
+    display: flex;
+}
+
+.--align-center {
+    display: flex;
+    align-items: center;
+}
+
+.--100vh {
+    height: 100vh;
+}
+
+.--mh-100vh {
+    min-height: 100vh;
+}

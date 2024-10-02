@@ -1,27 +1,38 @@
-import React from 'react'
-import { Link } from "react-router-dom"
-import "./Header.css"
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import "./Header.css";
+import { FiMenu } from "react-icons/fi";
 
 const Header = () => {
-    return (
-        <header className='header '>
-            <nav className=''>
-                <Link to="/" className=''>
-                    Auth
-                </Link>
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-                <div className=''>
-                    <Link to="#">
-                        Posts
-                    </Link>
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
-                    <Link to="/">
-                        <img className=' ' src='' alt='profile image' />
-                    </Link>
-                </div>
-            </nav>
-        </header>
-    )
-}
+  return (
+    <header className="header">
+      <nav className="nav">
+        <Link to="/" className="logo">
+          Auth
+        </Link>
 
-export default Header
+        <button className="menu-toggle" onClick={toggleMenu}>
+        <FiMenu />
+        </button>
+
+        <div className={`nav-links ${isMenuOpen ? "active" : ""}`}>
+          <Link to="#">Login</Link>
+          <Link to="#">Profile</Link>
+          <Link to="#">Logout</Link>
+
+          <Link to="/">
+            <img className="profile-img" src="" alt="profile image" />
+          </Link>
+        </div>
+      </nav>
+    </header>
+  );
+};
+
+export default Header;

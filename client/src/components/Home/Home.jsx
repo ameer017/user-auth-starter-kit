@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 const Home = () => {
   return (
     <div className='flex justify-center items-center min-h-[85vh]'>
-      <div className='w-3/4 p-4 flex items-center justify-between md:flex-row flex-col '>
+      {/* <div className='w-3/4 p-4 flex items-center justify-between md:flex-row flex-col '>
         <div>
           <h1 className='text-2xl font-bold mb-4 text-center md:text-left'>
             Secure, Scalable Authentication Made Easy
@@ -23,7 +23,7 @@ const Home = () => {
         <div>
           <img src='https://cdn.dribbble.com/users/279014/screenshots/5722905/dribbble_1.gif' alt='hero-image' />
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

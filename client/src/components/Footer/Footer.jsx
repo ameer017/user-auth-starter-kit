@@ -1,17 +1,14 @@
-import React from 'react'
+import React from "react";
 
 const Footer = () => {
-    const currentYear = new Date().getFullYear()
-    return (
-        <footer className='flex items-center justify-center'>
+  const currentYear = new Date().getFullYear();
+  return (
+    <footer
+      style={{ borderTop: "2px solid", padding: "10px", textAlign: "center" }}
+    >
+      <p>Copyright &copy; {currentYear}, All rights reserved.</p>
+    </footer>
+  );
+};
 
-            <div className='w-3/4  flex justify-between p-2 '>
-                <p className='text-center  w-full border-t-2  py-2' >
-                    Copyright &copy; {currentYear}, All rights reserved.
-                </p>
-            </div>
-        </footer>
-    )
-}
-
-export default Footer
+export default Footer;

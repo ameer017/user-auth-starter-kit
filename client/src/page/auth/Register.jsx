@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Auth.css";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
+import { register, RESET } from "../../redux/features/auth/authSlice";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +13,8 @@ const Register = () => {
     password2: "",
   });
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -16,11 +22,34 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const { isLoggedIn, isSuccess } = useSelector((state) => state.auth);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted", formData);
-    // Handle form submission logic here
+
+    if (!fullName || !emailAddress || !password) {
+      return toast.error("Please, fill all fields");
+    }
+
+    if (password.length < 6) {
+      return toast.error("Password must be up to 6 characters");
+    }
+
+    if (password !== password2) {
+      return toast.error("Passwords do not match");
+    }
+
+    const userData = { fullName, emailAddress, password };
+
+    await dispatch(register(userData));
   };
+
+  useEffect(() => {
+    if (isSuccess && isLoggedIn) {
+      navigate("/profile-page");
+    }
+    dispatch(RESET);
+  }, [isLoggedIn, isSuccess, dispatch, navigate]);
 
   return (
     <div className="register-container">
@@ -85,6 +114,29 @@ const Register = () => {
         <button type="submit" className="register-btn">
           Register
         </button>
+
+        <div className="--flex-between">
+          <Link
+            to="/"
+            style={{
+              textDecoration: "underline",
+            }}
+          >
+            - Home -
+          </Link>
+
+          <p>
+            Already a user?{" "}
+            <Link
+              to="/sign-in"
+              style={{
+                textDecoration: "underline",
+              }}
+            >
+              SIgn In
+            </Link>
+          </p>
+        </div>
       </form>
     </div>
   );

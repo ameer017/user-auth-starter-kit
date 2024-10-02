@@ -21,7 +21,7 @@ route.get("/get-users", protect, getUsers)
 
 
 route.delete("/delete-user/:id", protect, adminOnly, deleteUser)
-route.get("/get-user/:id", protect, getUser)
+route.get("/get-user", protect, getUser)
 
 
 module.exports = route;

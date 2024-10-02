@@ -360,7 +360,7 @@ const authSlice = createSlice({
                 console.log(action.payload)
                 toast.success(action.payload)
             })
-            .addCase(login.rejected, (state) => {
+            .addCase(login.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;

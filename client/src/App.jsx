@@ -24,11 +24,11 @@ export default function App() {
           <Register />
         </Layout>} />
 
-        <Route path='/login' element={<Layout>
+        <Route path='/sign-in' element={<Layout>
           <Login />
         </Layout>} />
 
-        <Route path='/profile' element={<Layout>
+        <Route path='/profile-page' element={<Layout>
           <Profile />
         </Layout>} />
 
